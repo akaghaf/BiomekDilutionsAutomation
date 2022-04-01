@@ -157,7 +157,6 @@ def main():
         thewriter = csv.DictWriter(csvofile, fieldnames=fieldnames)
         thewriter.writeheader()
         #will need to change TVF if you change to the other way
-        print(len(TVF))
         for val in range(0,len(TVF)):
             countr += 1
             thewriter.writerow({'Reservoir': res, 'Section' : section, 'SourcePlate': samples,
