@@ -21,9 +21,11 @@ SOURCEWELL_FILE = './dependent_files/source_well.csv'
 DESTWELL_FILE = './dependent_files/dest_well.csv'
 
 # List initialization
+# can we have more specific names for variables here?
+# should be very descriptive of what all the variables are so anyone can understand
 TV = []
 BV = []
-ABSOLUTE = []
+ABSORPTION = []
 D = []
 DN = []
 
@@ -73,19 +75,19 @@ def main():
 
         for item in f:
             if item.startswith("0"):
-                ABSOLUTE.append(item)
+                ABSORPTION.append(item)
             else:
                 D.append(item)
 
 
-        for position in range(0 ,len(ABSOLUTE)):
+        for position in range(0 ,len(ABSORPTION)):
             "use if/elif/else structure here its faster so you are not checking"
             " This does nothing if value is .3 or .6 decide where to be inclusive"
-            if float(ABSOLUTE[position]) < 0.3:
+            if float(ABSORPTION[position]) < 0.3:
                 DN.insert(position, int(D[position]) / 2)
-            elif float(ABSOLUTE[position]) > 0.6:
+            elif float(ABSORPTION[position]) > 0.6:
                 DN.insert(position, (int(D[position]) * 2))
-            elif (0.3 < float(ABSOLUTE[position]) < 0.6):
+            elif (0.3 < float(ABSORPTION[position]) < 0.6):
                 DN.insert( position,(D[position]))
 
 
@@ -101,6 +103,7 @@ def main():
 
     #reordering everything because we did it wrong the first time
     # do it right the first time?
+    # can we talk about what this section is and what it means?
     At =TVR[:12]
     Bt =TVR[12:24]
     Ct =TVR[24:36]
@@ -133,7 +136,7 @@ def main():
         fieldnames = ['Reservoir', 'Section','SourcePlate', 'Source Well', 'DestPlate', 'Dest Well' ,'Transfer Volume', 'Buffer Volume']
         thewriter = csv.DictWriter(csvofile, fieldnames=fieldnames)
         thewriter.writeheader()
-        #will need to change TVF if you change to the other way
+        # Would you want to change the form of the output here?
         for val in range(0,len(TVF)):
             counter += 1
             thewriter.writerow({'Reservoir': RES, 'Section' : SECTION, 'SourcePlate': SAMPLES,
