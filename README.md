@@ -1,7 +1,11 @@
 # BiomekDilutionsAutomation
 ## About the program
 
-Describe the program here
+This program takes two 8 by 12 csv's and outputs an instructional csv for the Biomek machine.
+The first csv must be the absorbance rates of each well in decimal places, with empty wells having placeholders.
+There should be no column headers or row titles. Just numerical values organized in a 8 by 12 csv, and placeholders for empty csv's.
+The absorbance values must start with a "0." to differentiate them from other data types.
+The second csv should have the dilution values with empty wells having placeholders. 
 
 ## How to Run
 

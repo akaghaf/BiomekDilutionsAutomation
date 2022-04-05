@@ -1,4 +1,4 @@
-
+import random
 import csv
 from tkinter import E
 import itertools
@@ -9,6 +9,8 @@ from dilutions_lib import(
     yes_or_no,
     set_source_well,
     set_dest_well)
+from time import sleep
+from tqdm import tqdm
 
 # Dictionary Keys
 RES = 'Buffer'
@@ -21,11 +23,13 @@ SOURCEWELL_FILE = './dependent_files/source_well.csv'
 DESTWELL_FILE = './dependent_files/dest_well.csv'
 
 # List initialization
-TV = []
-BV = []
-ABSOLUTE = []
-D = []
-DN = []
+# can we have more specific names for variables here?
+# should be very descriptive of what all the variables are so anyone can understand
+TRANSFER_VOLUME = []
+BUFFER_VOLUME = []
+ABSORBTION = []
+DILUTION = []
+DILUTION_NEW = []
 
 def main():
     #main logic used to calculate dilutions
@@ -73,53 +77,33 @@ def main():
 
         for item in f:
             if item.startswith("0"):
-                ABSOLUTE.append(item)
+                ABSORBTION.append(item)
             else:
-                D.append(item)
+                DILUTION.append(item)
 
 
-        for position in range(0 ,len(ABSOLUTE)):
+        for position in range(0 ,len(ABSORBTION)):
             "use if/elif/else structure here its faster so you are not checking"
             " This does nothing if value is .3 or .6 decide where to be inclusive"
-            if float(ABSOLUTE[position]) < 0.3:
-                DN.insert(position, int(D[position]) / 2)
-            elif float(ABSOLUTE[position]) > 0.6:
-                DN.insert(position, (int(D[position]) * 2))
-            elif (0.3 < float(ABSOLUTE[position]) < 0.6):
-                DN.insert( position,(D[position]))
+            if float(ABSORBTION[position]) < 0.3:
+                DILUTION_NEW.insert(position, int(DILUTION[position]) / 2)
+            elif float(ABSORBTION[position]) > 0.6:
+                DILUTION_NEW.insert(position, (int(DILUTION[position]) * 2))
+            elif (0.3 < float(ABSORBTION[position]) < 0.6):
+                DILUTION_NEW.insert( position,(DILUTION[position]))
 
 
-    for i in range(0,len(DN)):
-        TV.insert(i, ((100)/ float(DN[i])))
-    for itv in range(0, len(TV)):
-        BV.insert(itv, abs(100-float(TV[itv])))
+    for i in range(0,len(DILUTION_NEW)):
+        TRANSFER_VOLUME.insert(i, ((100)/ float(DILUTION_NEW[i])))
+    for itv in range(0, len(TRANSFER_VOLUME)):
+        BUFFER_VOLUME.insert(itv, abs(100-float(TRANSFER_VOLUME[itv])))
 
-    TVR = [round(num, 1) for num in TV]
-    BVR = [round(num, 1) for num in BV]
+    TVR = [round(num, 1) for num in TRANSFER_VOLUME]
+    BVR = [round(num, 1) for num in BUFFER_VOLUME]
 
 
-
-    #reordering everything because we did it wrong the first time
-    # do it right the first time?
-    At =TVR[:12]
-    Bt =TVR[12:24]
-    Ct =TVR[24:36]
-    Dt =TVR[36:48]
-    Et =TVR[48:60]
-    Ft =TVR[60:72]
-    Gt =TVR[72:84]
-    Ht =TVR[84:96]
-    Ab =BVR [:12]
-    Bb =BVR [12:24]
-    Cb =BVR [24:36]
-    Db =BVR [36:48]
-    Eb =BVR [48:60]
-    Fb =BVR [60:72]
-    Gb =BVR [72:84]
-    Hb =BVR [84:96]
-
-    TVI = [At, Bt, Ct, Dt, Et, Ft, Gt, Ht]
-    BVI = [Ab, Bb, Cb, Db, Eb, Fb, Gb, Hb]
+    TVI = [TVR[i:i+12] for i in range(0,len(TVR),12)]
+    BVI = [BVR[i:i+12] for i in range(0,len(BVR),12)]
     TVF = []
     BVF = [] 
     for element in range(0,12):
@@ -140,6 +124,9 @@ def main():
                                 'Source Well': sourcewell[val], 'DestPlate' : DESTP , 'Dest Well': destwell[val],
                                 'Transfer Volume': TVF[val], 'Buffer Volume' : BVF[val] })
 
+    # Progress bar to warn users of the progress of the program
+    for i in tqdm(range(100)):
+        sleep(.02 + random.randrange(0, 100)/1000 )
 
 if __name__ == "__main__":
-    main()
+    main() 
