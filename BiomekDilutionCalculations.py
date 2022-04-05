@@ -85,9 +85,9 @@ def main():
         for position in range(0 ,len(ABSORBTION)):
             "use if/elif/else structure here its faster so you are not checking"
             " This does nothing if value is .3 or .6 decide where to be inclusive"
-            if float(ABSORBTION[position]) < 0.3:
+            if float(ABSORBTION[position]) <= 0.3:
                 DILUTION_NEW.insert(position, int(DILUTION[position]) / 2)
-            elif float(ABSORBTION[position]) > 0.6:
+            elif float(ABSORBTION[position]) >= 0.6:
                 DILUTION_NEW.insert(position, (int(DILUTION[position]) * 2))
             elif (0.3 < float(ABSORBTION[position]) < 0.6):
                 DILUTION_NEW.insert( position,(DILUTION[position]))
@@ -104,14 +104,11 @@ def main():
 
     TVI = [TVR[i:i+12] for i in range(0,len(TVR),12)]
     BVI = [BVR[i:i+12] for i in range(0,len(BVR),12)]
-    TVF = []
-    BVF = [] 
+    TVF, BVF = [], []
+
     for element in range(0,12):
         TVF.extend([el[element] for el in TVI])
         BVF.extend([itm[element] for itm in TVI])
-
-    #counter that can be used to make sure right output of values
-    counter = 0
 
     with open(filenameoutp, 'w', newline = "") as csvofile:
         fieldnames = ['Reservoir', 'Section','SourcePlate', 'Source Well', 'DestPlate', 'Dest Well' ,'Transfer Volume', 'Buffer Volume']
@@ -119,7 +116,6 @@ def main():
         thewriter.writeheader()
         #will need to change TVF if you change to the other way
         for val in range(0,len(TVF)):
-            counter += 1
             thewriter.writerow({'Reservoir': RES, 'Section' : SECTION, 'SourcePlate': SAMPLES,
                                 'Source Well': sourcewell[val], 'DestPlate' : DESTP , 'Dest Well': destwell[val],
                                 'Transfer Volume': TVF[val], 'Buffer Volume' : BVF[val] })
